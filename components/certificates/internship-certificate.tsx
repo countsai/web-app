@@ -22,9 +22,10 @@ function calcDuration(start?: string, end?: string): string {
   if (!start || !end) return "one";
   const s = new Date(start);
   const e = new Date(end);
-  const months = Math.max(1, Math.round(
-    (e.getFullYear() - s.getFullYear()) * 12 + (e.getMonth() - s.getMonth())
-  ));
+  // Day-based: count inclusive days then divide by avg month length.
+  // This correctly counts May 1–June 30 as 2 months (61 days), not 1.
+  const days = Math.round((e.getTime() - s.getTime()) / 86400000) + 1;
+  const months = Math.max(1, Math.round(days / 30.44));
   return DURATION_WORDS[months - 1] ?? `${months}`;
 }
 
