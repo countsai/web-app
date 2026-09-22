@@ -134,6 +134,7 @@ const DOT_GRID_STYLE: React.CSSProperties = {
 function JoinModal({ onClose }: { onClose: () => void }) {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
   const [err, setErr] = useState("");
@@ -146,7 +147,7 @@ function JoinModal({ onClose }: { onClose: () => void }) {
       const res = await fetch("/api/program-interest", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email }),
+        body: JSON.stringify({ name, email, phone }),
       });
       if (res.ok) setDone(true);
       else { const d = await res.json(); setErr(d.error || "Something went wrong."); }
@@ -185,7 +186,7 @@ function JoinModal({ onClose }: { onClose: () => void }) {
             </div>
             <h3 className="text-2xl font-extrabold mb-2" style={{ color: "#071A24", letterSpacing: "-0.025em" }}>Express Your Interest</h3>
             <p className="text-sm mb-6" style={{ color: "#4E6670" }}>
-              Tell us your name and email. Our team will reach out with program details and pricing within 24 hours.
+              Tell us a bit about yourself. Our team will reach out with program details and pricing within 24 hours.
             </p>
             <form onSubmit={submit} className="space-y-3">
               <input
@@ -203,6 +204,16 @@ function JoinModal({ onClose }: { onClose: () => void }) {
                 placeholder="Your email *"
                 type="email"
                 required
+                className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all"
+                style={{ border: "1.5px solid #D9E5E7", color: "#071A24" }}
+                onFocus={e => { e.target.style.borderColor = "#079DB3"; }}
+                onBlur={e => { e.target.style.borderColor = "#D9E5E7"; }}
+              />
+              <input
+                value={phone}
+                onChange={e => setPhone(e.target.value)}
+                placeholder="Your phone number (optional)"
+                type="tel"
                 className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all"
                 style={{ border: "1.5px solid #D9E5E7", color: "#071A24" }}
                 onFocus={e => { e.target.style.borderColor = "#079DB3"; }}

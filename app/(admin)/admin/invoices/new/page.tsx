@@ -43,7 +43,7 @@ export default function NewInvoicePage() {
   const [results, setResults]       = useState<StudentResult[]>([]);
   const [searching, setSearching]   = useState(false);
   const [selected, setSelected]     = useState<StudentResult | null>(null);
-  const searchTimer = useRef<ReturnType<typeof setTimeout>>();
+  const searchTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   // Form fields
   const [consultantName, setConsultantName]   = useState("");

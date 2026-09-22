@@ -35,7 +35,7 @@ export function InternshipCertificate({ cert, qrSvg, logoDataUrl, signatureDataU
   const endDate   = cert.internship_end_date   ? formatDate(cert.internship_end_date)   : "—";
   const period    = cert.internship_start_date && cert.internship_end_date
     ? `${startDate} to ${endDate}` : "N/A";
-  const durationWord = calcDuration(cert.internship_start_date, cert.internship_end_date);
+  const durationWord = calcDuration(cert.internship_start_date ?? undefined, cert.internship_end_date ?? undefined);
   const durationMonths = durationWord === "one" ? "One Month" : `${durationWord.charAt(0).toUpperCase() + durationWord.slice(1)} Months`;
 
   return (

@@ -3,13 +3,14 @@ import { supabaseAdmin } from "@/lib/supabase";
 
 export async function POST(req: NextRequest) {
   try {
-    const { name, email } = await req.json();
+    const { name, email, phone } = await req.json();
     if (!email) return NextResponse.json({ error: "Email required." }, { status: 400 });
     const admin = supabaseAdmin();
     const { error } = await admin.from("program_interests").insert({
       user_id:  null,
       name:     name || null,
       email,
+      phone:    phone || null,
       status:   "interested",
     });
     if (error) {
