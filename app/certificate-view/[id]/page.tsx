@@ -153,6 +153,12 @@ export default async function CertificateViewPage({ params, searchParams }: Prop
             border-radius: 0 !important;
             overflow: visible !important;
           }
+          /* Force all background colors, gradients, and images to print */
+          *, *::before, *::after {
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+            color-adjust: exact !important;
+          }
           @page {
             size: A4 landscape;
             margin: 0;
