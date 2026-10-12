@@ -43,13 +43,19 @@ export function SiteFooter() {
             </p>
             <div className="space-y-2">
               {[
-                { Icon: Phone, text: "+44 7384 050895 (UK)" },
-                { Icon: Mail, text: "info@counts.ai" },
+                { Icon: Mail, text: "info@countsai.com" },
+                { Icon: Phone, text: "+44 7384 050895 | +91 99472 35533" },
               ].map(({ Icon, text }, i) => (
                 <div key={i} className="flex items-center gap-2 text-[11px] font-medium" style={{ color: "rgba(255,255,255,0.45)" }}>
                   <Icon size={11} /> {text}
                 </div>
               ))}
+              <p className="pt-1 text-[11px] font-bold" style={{ color: "rgba(255,255,255,0.55)" }}>
+                Registered in England and Wales
+              </p>
+              <p className="text-[11px] font-medium leading-relaxed" style={{ color: "rgba(255,255,255,0.45)" }}>
+                Registered Office: 124 City Rd, London EC1V 2NX, United Kingdom
+              </p>
             </div>
           </div>
 

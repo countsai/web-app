@@ -2,7 +2,8 @@ import { createHmac, timingSafeEqual } from "crypto";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
-const COOKIE_NAME = "cai_admin_token";
+// Firebase Hosting strips every cookie except "__session" before requests reach the SSR function.
+const COOKIE_NAME = "__session";
 const EXPIRY_MS   = 12 * 60 * 60 * 1000; // 12 h
 
 function getSecret(): string {
