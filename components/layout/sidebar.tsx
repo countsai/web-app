@@ -21,24 +21,24 @@ const CANDIDATE_GROUPS = [
   {
     label: "Career",
     items: [
-      { name: "AI Jobs",      href: ROUTES.PUBLIC_JOBS,  icon: "Briefcase" },
-      { name: "Applications", href: ROUTES.APPLICATIONS, icon: "ClipboardList" },
-      { name: "Career Scan",  href: ROUTES.CAREER_SCAN,  icon: "ScanSearch" },
+      { name: "Find Jobs",       href: ROUTES.PUBLIC_JOBS,  icon: "Briefcase" },
+      { name: "Resume",          href: "/profile/edit",     icon: "FileText" },
+      { name: "Career Scan",     href: ROUTES.CAREER_SCAN,  icon: "ScanSearch" },
     ],
   },
   {
-    label: "Program",
+    label: "Learning",
     items: [
-      { name: "Training",     href: "/training",          icon: "GraduationCap" },
-      { name: "Certificates", href: ROUTES.DASHBOARD,     icon: "Shield" },
-      { name: "Proof of Work",href: ROUTES.PROOF_OF_WORK, icon: "Cpu" },
+      { name: "My Training",     href: "/training",                 icon: "GraduationCap" },
+      { name: "My Certificates", href: `${ROUTES.DASHBOARD}#certificates`, icon: "Shield" },
     ],
   },
   {
     label: "Account",
     items: [
-      { name: "Profile",   href: ROUTES.PROFILE,  icon: "User" },
-      { name: "Settings",  href: ROUTES.SETTINGS, icon: "Settings" },
+      { name: "Profile",      href: ROUTES.PROFILE,  icon: "User" },
+      { name: "Settings",     href: ROUTES.SETTINGS, icon: "Settings" },
+      { name: "Subscription", href: "/pricing",      icon: "CreditCard" },
     ],
   },
 ];
@@ -181,26 +181,16 @@ export function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean; onClose
       {/* Bottom Section */}
       <div className="shrink-0 border-t px-3 py-4 space-y-3" style={{ borderColor: "#cfe1e4" }}>
 
-        {/* Upgrade nudge for free candidates */}
+        {/* Upgrade nudge for free candidates (compact) */}
         {user.role === "jobseeker" && currentPlan === "Free" && (
-          <div className="rounded-2xl p-4 space-y-2.5" style={{ background: "linear-gradient(135deg, #079DB3, #16a3ba)" }}>
-            <div className="flex items-center gap-1.5">
-              <Icons.Award size={13} className="text-white" />
-              <span className="text-xs font-black text-white uppercase tracking-widest">Upgrade to Premium</span>
-            </div>
-            <p className="text-[11px] text-white/70 font-medium leading-snug">
-              Unlock all jobs, AI Auto-Apply Engine & your Week 1 Interview Guarantee.
-            </p>
-            <Link href="/pricing">
-              <Button
-                size="sm"
-                className="w-full h-8 rounded-xl font-black text-[11px] gap-1.5 shadow-md"
-                style={{ background: "#079DB3", color: "#fff", border: "none" }}
-              >
-                Upgrade Now <Icons.ArrowRight size={12} />
-              </Button>
-            </Link>
-          </div>
+          <Link
+            href="/pricing"
+            className="flex items-center justify-between gap-2 rounded-xl px-3 py-2 text-xs font-bold transition-colors hover:bg-[#dff1f3]"
+            style={{ background: "#e9f5f6", color: "#079DB3" }}
+          >
+            <span className="flex items-center gap-1.5"><Icons.Award size={13} /> Upgrade to Premium</span>
+            <Icons.ArrowRight size={12} />
+          </Link>
         )}
 
         {/* User Account */}

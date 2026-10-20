@@ -2,15 +2,11 @@
 
 import { useState } from "react";
 import { Sidebar } from "./sidebar";
-import { Search, Bell, Sparkles, Menu } from "lucide-react";
+import { Search, Bell, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { useRole } from "@/lib/role-context";
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const { user } = useRole();
-  const isFree = user.subscription_tier === "free";
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
@@ -49,11 +45,6 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
-            {isFree && (
-              <Badge className="bg-amber-50 text-amber-600 border-amber-200 font-bold text-[10px] px-3 py-1 rounded-full gap-1 hidden sm:flex">
-                <Sparkles size={10} /> 4 trial days left
-              </Badge>
-            )}
             <Button
               variant="ghost"
               size="icon"

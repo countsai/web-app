@@ -45,7 +45,7 @@ export default function VerifyPage() {
       <div style={{ background: "#0a3a44", padding: "16px 24px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <Link href="/" style={{ textDecoration: "none" }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo.png" alt="Counts AI" style={{ height: "28px", objectFit: "contain" }} />
+          <img src="/logo-light.png" alt="Counts AI" style={{ height: "28px", objectFit: "contain" }} />
         </Link>
         <div style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "12px", color: "rgba(255,255,255,0.6)" }}>
           <Shield size={13} />

@@ -4,51 +4,59 @@ import { useState } from "react";
 import Link from "next/link";
 import { PublicNavbar } from "@/components/shared/public-nav";
 import { SiteFooter } from "@/components/shared/site-footer";
+import { Reveal } from "@/components/home/reveal";
+import { CareerOutcomes, CertNote, EmployerStrip } from "@/components/home/academy";
+import { serif, mono, display } from "@/components/home/fonts";
+import "@/components/home/home.css";
+import "./training.css";
 import {
-  ArrowRight, CheckCircle2, Brain, Wrench, Rocket,
-  Globe, Code2, Users, Zap, Shield, ChevronDown,
+  ArrowRight, Brain, Wrench, Rocket, Globe, Code2, Users, ChevronDown, ShieldCheck,
 } from "lucide-react";
 
-import type { Metadata } from "next";
-
-const MONTH1_TOPICS = [
-  "Generative AI fundamentals", "Large Language Models (LLMs)",
-  "Prompt engineering", "OpenAI, Claude & Gemini APIs",
-  "RAG (Retrieval-Augmented Generation)", "Embeddings & vector databases",
-  "AI agents & agentic workflows", "Tool calling & function calling",
-  "Multi-agent systems", "AI application development",
-  "AI automation pipelines", "Evaluation & responsible AI",
-];
-
-const MONTH2_TOPICS = [
-  "Customer problem discovery", "Technical solution design",
-  "AI integrations & APIs", "Backend development",
-  "Frontend integration", "Databases & storage",
-  "Cloud deployment & Docker", "Production AI systems",
-  "AI agents in business workflows", "Business automation",
-  "Working with clients", "Technical communication",
-];
-
-const MONTH3_TOPICS = [
-  "AI application projects", "AI agent development",
-  "Internal tooling", "Client projects (where appropriate)",
-  "AI research & experimentation", "Software engineering",
-  "Product development", "Remote collaboration",
+const MONTHS = [
+  {
+    id: "month1", n: "01", label: "Month One", cert: "GenAI & Agentic AI", c: "#0F9AA6", tint: "#DDF1EE",
+    title: "Generative AI & Agentic AI",
+    desc: "Focus on modern AI engineering. Learn to build with the most capable AI models and develop real applications using agents, RAG, and agentic workflows.",
+    groups: [
+      ["Foundations", ["Generative AI fundamentals", "Large Language Models (LLMs)", "Prompt engineering", "OpenAI, Claude & Gemini APIs"]],
+      ["Retrieval", ["RAG (Retrieval-Augmented Generation)", "Embeddings & vector databases"]],
+      ["Agents", ["AI agents & agentic workflows", "Tool calling & function calling", "Multi-agent systems"]],
+      ["Applications", ["AI application development", "AI automation pipelines", "Evaluation & responsible AI"]],
+    ] as [string, string[]][],
+    outcome: "Build working AI applications from scratch. GenAI certificate issued.",
+  },
+  {
+    id: "month2", n: "02", label: "Month Two", cert: "Forward Deployed Engineering", c: "#0A5963", tint: "#D6EAEA", popular: true,
+    title: "Forward Deployed Engineering",
+    desc: "Learn to take AI technology and deploy it into real business environments. A unique blend of software engineering, AI engineering, solutions engineering, and consulting.",
+    groups: [
+      ["Discovery & design", ["Customer problem discovery", "Technical solution design"]],
+      ["Build", ["AI integrations & APIs", "Backend development", "Frontend integration", "Databases & storage"]],
+      ["Deploy", ["Cloud deployment & Docker", "Production AI systems"]],
+      ["Business", ["AI agents in business workflows", "Business automation", "Working with clients", "Technical communication"]],
+    ] as [string, string[]][],
+    outcome: "Deploy AI into real businesses. FDE certificate issued.",
+  },
+  {
+    id: "month3", n: "03", label: "Month Three", cert: "FDE Internship", c: "#3E9B73", tint: "#DAEEE2",
+    title: "Counts AI Remote Internship",
+    desc: "Put your skills to work. Students contribute to real projects remotely with the Counts AI UK team: AI applications, agents, automation, and software engineering.",
+    groups: [
+      ["Projects", ["AI application projects", "AI agent development", "Internal tooling", "Client projects (where appropriate)"]],
+      ["Engineering", ["AI research & experimentation", "Software engineering", "Product development", "Remote collaboration"]],
+    ] as [string, string[]][],
+    outcome: "Real remote work experience with a UK AI consultancy. Internship certificate issued.",
+  },
 ];
 
 const OUTCOMES = [
-  { icon: Brain,  text: "Deep understanding of modern AI engineering" },
-  { icon: Code2,  text: "Hands-on experience building AI applications and agents" },
-  { icon: Wrench, text: "Practical skills deploying AI into real business environments" },
-  { icon: Rocket, text: "Remote work experience with a UK-based AI consultancy" },
-  { icon: Globe,  text: "A portfolio of real projects to show employers" },
-  { icon: Users,  text: "A network of AI professionals and engineers" },
-];
-
-const CERTS = [
-  { id: "CAI-GENAI", label: "GenAI & Agentic AI", month: "Month 1", color: "#079DB3", bg: "#e3f7fb" },
-  { id: "CAI-FDE",   label: "Forward Deployed Engineering", month: "Month 2", color: "#079DB3", bg: "#E7F5F4" },
-  { id: "CAI-FDE-INT", label: "FDE Internship", month: "Month 3", color: "#1f9d63", bg: "#e8f8f1" },
+  { icon: Brain, t: "AI engineering fundamentals", d: "Deep understanding of modern AI engineering." },
+  { icon: Code2, t: "Hands-on projects", d: "Experience building AI applications and agents." },
+  { icon: Wrench, t: "Practical deployment", d: "Skills deploying AI into real business environments." },
+  { icon: Rocket, t: "Remote team experience", d: "Remote work with a UK-based AI consultancy." },
+  { icon: Globe, t: "Portfolio development", d: "A portfolio of real projects to show employers." },
+  { icon: Users, t: "Professional network", d: "A network of AI professionals and engineers." },
 ];
 
 const FAQS = [
@@ -61,275 +69,167 @@ const FAQS = [
 
 export default function TrainingPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [openMonth, setOpenMonth] = useState<Record<string, boolean>>({ month1: true, month2: true, month3: true });
 
   return (
-    <div style={{ fontFamily: "var(--font-sans)" }}>
+    <div className={`ch tr ${serif.variable} ${mono.variable} ${display.variable}`}>
       <PublicNavbar active="AI Programs" />
 
-      {/* ── HERO ── */}
-      <section
-        className="relative overflow-hidden"
-        style={{
-          background: "linear-gradient(160deg, #07111f 0%, #0a2030 55%, #0d2a38 100%)",
-          paddingTop: "5rem",
-          paddingBottom: "5rem",
-        }}
-      >
-        <div className="absolute inset-0 bg-grid opacity-20" />
-        <div
-          className="absolute top-0 left-1/2 -translate-x-1/2 pointer-events-none"
-          style={{ width: "60vw", height: "40vh", background: "radial-gradient(ellipse at center, rgba(0,151,178,0.12) 0%, transparent 65%)" }}
-        />
-
-        <div className="cai-container relative z-10 text-center">
-          <div
-            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full mb-6 text-[11px] font-bold uppercase tracking-widest"
-            style={{ background: "rgba(0,151,178,0.15)", border: "1px solid rgba(0,151,178,0.3)", color: "#00b4d4" }}
-          >
-            <Zap size={11} /> 3-Month AI Engineering Program
-          </div>
-
-          <h1 className="display-xl text-white mb-5 max-w-3xl mx-auto">
-            3 Months.{" "}
-            <span style={{ color: "#00b4d4" }}>Real AI Skills.</span>
-            <br />
-            Real Experience.
-          </h1>
-
-          <p className="text-lg max-w-2xl mx-auto mb-8 leading-relaxed" style={{ color: "rgba(255,255,255,0.55)" }}>
-            Go from learning AI to working on real-world AI projects — a structured training and internship experience with Counts AI&apos;s UK team.
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <Link
-              href="/training/apply"
-              className="flex items-center gap-2 px-7 py-3.5 rounded-full text-sm font-bold text-white transition-all hover:opacity-90"
-              style={{ background: "var(--teal)" }}
-            >
-              Apply Now <ArrowRight size={14} />
-            </Link>
-            <a
-              href="#program"
-              className="flex items-center gap-2 px-7 py-3.5 rounded-full text-sm font-bold transition-all hover:bg-white/10"
-              style={{ color: "rgba(255,255,255,0.7)", border: "1px solid rgba(255,255,255,0.15)" }}
-            >
-              View Program
-            </a>
-          </div>
+      {/* hero */}
+      <section className="tr-hero">
+        <div className="wrap tr-hero-grid">
+          <Reveal>
+            <div className="eyebrow">Counts AI Academy</div>
+            <h1 className="tr-h1">3 Months. <em>Real AI Skills.</em> <em>Real Experience.</em></h1>
+            <p className="lede" style={{ margin: "18px 0 24px", maxWidth: "50ch" }}>
+              A fully remote, three-month programme: generative AI and agents, forward deployed engineering, and a remote internship with the Counts AI UK team.
+            </p>
+            <div className="tr-ctas">
+              <Link href="/training/apply" className="btn btn-dark">Apply Now <ArrowRight size={14} /></Link>
+              <a href="#program" className="btn btn-ghost">View Programme</a>
+            </div>
+            <ul className="tr-facts">
+              <li><b>100%</b><span>Guaranteed internship</span></li>
+              <li><b>840+</b><span>Students enrolled</span></li>
+              <li><b>90%</b><span>Students double their salary</span></li>
+              <li><b>3</b><span>Verifiable certificates from a leading London AI consultancy</span></li>
+            </ul>
+          </Reveal>
+          <Reveal delay={120}>
+            <div className="tr-photo" role="img" aria-label="Two engineers collaborating on an AI project in a bright London office" />
+          </Reveal>
         </div>
-
-        <div
-          className="absolute bottom-0 left-0 right-0 h-16 pointer-events-none"
-          style={{ background: "linear-gradient(to bottom, transparent, var(--background))" }}
-        />
       </section>
 
-      {/* ── OUTCOMES ── */}
-      <section className="py-16" style={{ background: "var(--background)" }}>
-        <div className="cai-container">
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {OUTCOMES.map((o) => (
-              <div
-                key={o.text}
-                className="flex items-start gap-3 rounded-2xl p-5 transition-all hover:shadow-sm"
-                style={{ background: "white", border: "1.5px solid #dbe9eb" }}
-              >
-                <div className="h-9 w-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: "#e3f7fb" }}>
-                  <o.icon size={16} style={{ color: "var(--teal)" }} />
-                </div>
-                <p className="text-sm font-semibold leading-snug mt-1" style={{ color: "#0d2030" }}>{o.text}</p>
-              </div>
+      {/* outcomes */}
+      <section className="sec" id="outcomes">
+        <div className="wrap tr-outcomes">
+          <CareerOutcomes />
+          <CertNote />
+          <EmployerStrip />
+        </div>
+      </section>
+
+      {/* benefits */}
+      <section className="sec">
+        <div className="wrap">
+          <Reveal>
+            <div className="eyebrow">Why join the programme</div>
+            <h2 className="h2 tr-h2">What you take <em>away.</em></h2>
+          </Reveal>
+          <div className="tr-ben">
+            {OUTCOMES.map(({ icon: Icon, t, d }, i) => (
+              <Reveal key={t} delay={i * 50}>
+                <div className="tr-ben-card"><span><Icon size={20} /></span><h3>{t}</h3><p>{d}</p></div>
+              </Reveal>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── CERTIFICATIONS ── */}
-      <section id="certs" className="py-16 border-y" style={{ borderColor: "#dbe9eb", background: "var(--surface-2)" }}>
-        <div className="cai-container">
-          <div className="text-center mb-10">
-            <div className="label-overline mb-2" style={{ color: "var(--teal)" }}>Credentials</div>
-            <h2 className="display-md text-[#07111f]">Three verifiable certificates.</h2>
-            <p className="text-sm mt-2" style={{ color: "#486870" }}>Each issued on completion of its respective month. Verified on countsai.com.</p>
-          </div>
-
-          <div className="grid sm:grid-cols-3 gap-5">
-            {CERTS.map(c => (
-              <div
-                key={c.id}
-                className="rounded-2xl p-5 text-center"
-                style={{ background: c.bg, border: `1.5px solid ${c.color}25` }}
-              >
-                <div
-                  className="h-12 w-12 rounded-xl flex items-center justify-center mx-auto mb-3"
-                  style={{ background: c.color + "20" }}
-                >
-                  <Shield size={20} style={{ color: c.color }} />
-                </div>
-                <div className="label-overline mb-1" style={{ color: c.color }}>{c.month}</div>
-                <div className="text-sm font-bold mb-1" style={{ color: "#07111f" }}>{c.label}</div>
-                <div className="text-[10px] font-mono font-bold" style={{ color: c.color + "aa" }}>{c.id}-XXXX</div>
-              </div>
+      {/* stages */}
+      <section className="sec" id="certs">
+        <div className="wrap">
+          <Reveal>
+            <div className="eyebrow">The programme</div>
+            <h2 className="h2 tr-h2">Three stages, <em>three certificates.</em></h2>
+            <p className="lede" style={{ marginTop: 12 }}>Each certificate is issued on completion of its month and can be checked on our <Link href="/verify" className="tr-link">verification page</Link>.</p>
+          </Reveal>
+          <ol className="tr-stages">
+            {MONTHS.map((m, i) => (
+              <li key={m.id} style={{ ["--ac" as string]: m.c, ["--tint" as string]: m.tint }}>
+                <a href={`#${m.id}`} className={`tr-stage ${m.popular ? "pop" : ""}`}>
+                  {m.popular && <span className="tr-pop">Core stage</span>}
+                  <span className="tr-num">{m.n}</span>
+                  <small>{m.label}</small>
+                  <h3>{m.cert}</h3>
+                  <p>{m.outcome.split(".")[0]}.</p>
+                </a>
+                {i < MONTHS.length - 1 && <ArrowRight className="tr-arrow" size={18} aria-hidden="true" />}
+              </li>
             ))}
+          </ol>
+        </div>
+      </section>
+
+      {/* curriculum */}
+      <section className="sec" id="program">
+        <div className="wrap">
+          <Reveal>
+            <div className="eyebrow">Curriculum</div>
+            <h2 className="h2 tr-h2">What you&apos;ll learn <em>and build.</em></h2>
+          </Reveal>
+          <div className="tr-months">
+            {MONTHS.map((m) => {
+              const open = openMonth[m.id];
+              return (
+                <Reveal key={m.id}>
+                  <article id={m.id} className="tr-month" style={{ ["--ac" as string]: m.c, ["--tint" as string]: m.tint }}>
+                    <button
+                      type="button"
+                      className="tr-month-h"
+                      aria-expanded={open}
+                      aria-controls={`${m.id}-body`}
+                      onClick={() => setOpenMonth((s) => ({ ...s, [m.id]: !s[m.id] }))}
+                    >
+                      <span className="tr-num">{m.n}</span>
+                      <span className="tr-month-t"><small>{m.label}</small><b>{m.title}</b></span>
+                      <ChevronDown size={18} className={open ? "rot" : ""} aria-hidden="true" />
+                    </button>
+                    {open && (
+                      <div id={`${m.id}-body`} className="tr-month-b">
+                        <p>{m.desc}</p>
+                        <div className="tr-groups">
+                          {m.groups.map(([g, items]) => (
+                            <div key={g}>
+                              <h4>{g}</h4>
+                              <ul>{items.map((t) => <li key={t}>{t}</li>)}</ul>
+                            </div>
+                          ))}
+                        </div>
+                        <p className="tr-outcome"><ShieldCheck size={15} /> Outcome: {m.outcome}</p>
+                      </div>
+                    )}
+                  </article>
+                </Reveal>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* ── THREE-MONTH PROGRAM ── */}
-      <section id="program" className="py-20" style={{ background: "white" }}>
-        <div className="cai-container">
-          <div className="text-center mb-14">
-            <div className="label-overline mb-2" style={{ color: "var(--teal)" }}>The Program</div>
-            <h2 className="display-md text-[#07111f]">What you&apos;ll learn and build.</h2>
-          </div>
-
-          <div className="space-y-6">
-            {/* Month 1 */}
-            <div id="month1" className="scroll-mt-24 rounded-2xl overflow-hidden" style={{ border: "1.5px solid #dbe9eb" }}>
-              <div className="px-6 py-5 flex items-center gap-4" style={{ background: "#e3f7fb", borderBottom: "1.5px solid #b5e9f2" }}>
-                <div className="h-12 w-12 rounded-xl flex items-center justify-center text-white font-black text-lg shrink-0" style={{ background: "#079DB3" }}>
-                  01
-                </div>
-                <div>
-                  <div className="label-overline" style={{ color: "#079DB3" }}>Month One</div>
-                  <h3 className="text-lg font-bold" style={{ color: "#07111f", letterSpacing: "-0.02em" }}>Generative AI & Agentic AI</h3>
-                </div>
-              </div>
-              <div className="p-6">
-                <p className="text-sm leading-relaxed mb-5" style={{ color: "#486870" }}>
-                  Focus on modern AI engineering. Learn to build with the most capable AI models and develop real applications using agents, RAG, and agentic workflows.
-                </p>
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {MONTH1_TOPICS.map(t => (
-                    <span key={t} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium" style={{ background: "#e3f7fb", color: "#0a3a44" }}>
-                      <CheckCircle2 size={10} style={{ color: "#079DB3" }} /> {t}
-                    </span>
-                  ))}
-                </div>
-                <div className="pt-4 border-t flex items-center gap-2" style={{ borderColor: "#dbe9eb" }}>
-                  <Shield size={13} style={{ color: "#079DB3" }} />
-                  <p className="text-sm font-bold" style={{ color: "#079DB3" }}>Outcome: Build working AI applications from scratch. GenAI certificate issued.</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Month 2 */}
-            <div id="month2" className="scroll-mt-24 rounded-2xl overflow-hidden" style={{ border: "1.5px solid #dbe9eb" }}>
-              <div className="px-6 py-5 flex items-center gap-4" style={{ background: "#E7F5F4", borderBottom: "1.5px solid #fde2d2" }}>
-                <div className="h-12 w-12 rounded-xl flex items-center justify-center text-white font-black text-lg shrink-0" style={{ background: "#079DB3" }}>
-                  02
-                </div>
-                <div>
-                  <div className="label-overline" style={{ color: "#079DB3" }}>Month Two</div>
-                  <h3 className="text-lg font-bold" style={{ color: "#07111f", letterSpacing: "-0.02em" }}>Forward Deployed Engineer Training</h3>
-                </div>
-              </div>
-              <div className="p-6">
-                <p className="text-sm leading-relaxed mb-5" style={{ color: "#486870" }}>
-                  Learn to take AI technology and deploy it into real business environments. A unique blend of software engineering, AI engineering, solutions engineering, and consulting.
-                </p>
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {MONTH2_TOPICS.map(t => (
-                    <span key={t} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium" style={{ background: "#fff1ec", color: "#0a3a44" }}>
-                      <CheckCircle2 size={10} style={{ color: "#079DB3" }} /> {t}
-                    </span>
-                  ))}
-                </div>
-                <div className="pt-4 border-t flex items-center gap-2" style={{ borderColor: "#fde2d2" }}>
-                  <Shield size={13} style={{ color: "#079DB3" }} />
-                  <p className="text-sm font-bold" style={{ color: "#079DB3" }}>Outcome: Deploy AI into real businesses. FDE certificate issued.</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Month 3 */}
-            <div id="month3" className="scroll-mt-24 rounded-2xl overflow-hidden" style={{ border: "1.5px solid #dbe9eb" }}>
-              <div className="px-6 py-5 flex items-center gap-4" style={{ background: "#e8f8f1", borderBottom: "1.5px solid #bbdfd0" }}>
-                <div className="h-12 w-12 rounded-xl flex items-center justify-center text-white font-black text-lg shrink-0" style={{ background: "#1f9d63" }}>
-                  03
-                </div>
-                <div>
-                  <div className="label-overline" style={{ color: "#1f9d63" }}>Month Three</div>
-                  <h3 className="text-lg font-bold" style={{ color: "#07111f", letterSpacing: "-0.02em" }}>Counts AI Remote Internship</h3>
-                </div>
-              </div>
-              <div className="p-6">
-                <p className="text-sm leading-relaxed mb-5" style={{ color: "#486870" }}>
-                  Put your skills to work. Students contribute to real projects remotely with the Counts AI UK team — AI applications, agents, automation, and software engineering.
-                </p>
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {MONTH3_TOPICS.map(t => (
-                    <span key={t} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium" style={{ background: "#e0f5eb", color: "#0a3a44" }}>
-                      <CheckCircle2 size={10} style={{ color: "#1f9d63" }} /> {t}
-                    </span>
-                  ))}
-                </div>
-                <div className="pt-4 border-t flex items-center gap-2" style={{ borderColor: "#bbdfd0" }}>
-                  <Shield size={13} style={{ color: "#1f9d63" }} />
-                  <p className="text-sm font-bold" style={{ color: "#1f9d63" }}>Outcome: Real remote work experience with a UK AI consultancy. Internship certificate issued.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── FAQ ── */}
-      <section className="py-20" style={{ background: "var(--surface-1)" }}>
-        <div className="cai-container max-w-3xl">
-          <div className="text-center mb-10">
-            <div className="label-overline mb-2" style={{ color: "var(--teal)" }}>FAQ</div>
-            <h2 className="display-md text-[#07111f]">Common questions.</h2>
-          </div>
-          <div className="space-y-3">
+      {/* faq */}
+      <section className="sec" id="faq">
+        <div className="wrap tr-faq-wrap">
+          <Reveal>
+            <div className="eyebrow">FAQ</div>
+            <h2 className="h2 tr-h2">Common <em>questions.</em></h2>
+          </Reveal>
+          <div className="tr-faq">
             {FAQS.map((f, i) => (
-              <div
-                key={f.q}
-                className="rounded-2xl overflow-hidden"
-                style={{ border: "1.5px solid #dbe9eb", background: "white" }}
-              >
-                <button
-                  className="w-full flex items-center justify-between px-6 py-5 text-left"
-                  onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                  aria-expanded={openFaq === i}
-                >
-                  <span className="text-sm font-bold" style={{ color: "#07111f" }}>{f.q}</span>
-                  <ChevronDown
-                    size={16}
-                    className={`transition-transform duration-200 shrink-0 ml-4 ${openFaq === i ? "rotate-180" : ""}`}
-                    style={{ color: "#85a0a4" }}
-                  />
+              <div key={f.q} className={`tr-q ${openFaq === i ? "on" : ""}`}>
+                <button type="button" onClick={() => setOpenFaq(openFaq === i ? null : i)} aria-expanded={openFaq === i} aria-controls={`faq-${i}`}>
+                  <span>{f.q}</span>
+                  <ChevronDown size={16} className={openFaq === i ? "rot" : ""} aria-hidden="true" />
                 </button>
-                {openFaq === i && (
-                  <div className="px-6 pb-5 border-t" style={{ borderColor: "#f0f4f5" }}>
-                    <p className="text-sm leading-relaxed pt-4" style={{ color: "#486870" }}>{f.a}</p>
-                  </div>
-                )}
+                {openFaq === i && <p id={`faq-${i}`}>{f.a}</p>}
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── CTA ── */}
-      <section
-        className="py-20 relative overflow-hidden"
-        style={{ background: "linear-gradient(135deg, #07111f 0%, #0a2030 60%, #0d3a4a 100%)" }}
-      >
-        <div className="absolute inset-0 bg-grid opacity-20" />
-        <div className="cai-container relative z-10 text-center">
-          <div className="label-overline mb-4" style={{ color: "#00b4d4" }}>Apply today</div>
-          <h2 className="display-md text-white mb-4">Ready to start your AI career?</h2>
-          <p className="text-base mb-8 max-w-md mx-auto" style={{ color: "rgba(255,255,255,0.5)" }}>
-            We review every application and respond within 3 business days.
-          </p>
-          <Link
-            href="/training/apply"
-            className="inline-flex items-center gap-2 px-7 py-4 rounded-full text-sm font-bold text-white transition-all hover:opacity-90"
-            style={{ background: "var(--teal)" }}
-          >
-            Apply Now <ArrowRight size={14} />
-          </Link>
+      {/* apply */}
+      <section className="tr-cta" aria-labelledby="tr-cta-title">
+        <div className="wrap tr-cta-in">
+          <div className="tr-cta-copy">
+            <h2 id="tr-cta-title">Ready to start <em>your AI career?</em></h2>
+            <p>Join our next cohort and gain hands-on experience building real AI applications with the Counts AI UK team.</p>
+            <div className="tr-cta-btns">
+              <Link href="/training/apply" className="btn btn-light tr-apply">Apply Now <ArrowRight size={14} /></Link>
+              <a href="#program" className="btn btn-light">View Programme</a>
+            </div>
+          </div>
         </div>
       </section>
 
